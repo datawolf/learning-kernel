@@ -9,7 +9,7 @@ Welcome to 内核知识's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    intro
    mem-management
@@ -19,6 +19,7 @@ Contents:
    driver
    kernel-data-structure
    kernel-notifier
+   misc
    
 
 
