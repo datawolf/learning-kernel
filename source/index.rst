@@ -10,6 +10,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 3
+   :numbered:
 
    intro
    mem-management
@@ -19,6 +20,7 @@ Contents:
    driver
    kernel-data-structure
    kernel-notifier
+   kernel_glossary
    misc
    
 

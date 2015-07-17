@@ -4,7 +4,7 @@
 ====
 
 .. toctree::
-        :maxdepth: 2
+        :maxdepth: 1
 
-        misc/c_skills.rst
-        misc/debug_skill.rst
+        misc/c_skills
+        misc/debug_skill
