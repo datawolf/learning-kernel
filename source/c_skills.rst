@@ -65,3 +65,36 @@ This construct is used to check if a pointer was used as argument. When a plain 
 - http://stackoverflow.com/questions/4436889/what-is-typeofc-1-in-c
 
 
+
+volatile关键字的用法
+--------------------
+
+
+理解 ``volatile`` 的关键是知道它的目的是用来消除优化。
+
+在内核中，为了防止意外的并发访问破坏共享的数据结构，在这种情况下，如果可以正确的使用内核原语（自旋锁、互斥量、内存屏障等等），那么就没有必要再使用 ``volatile`` 。
+
+在内核中，有一些稀少的情况下应该使用 ``volatile`` :
+
+1. 在一些体系架构的系统上，在允许直接的IO内存访问，那么访问函数可以使用 ``volatile`` 。
+2. 某些会改变内存的内联汇编代码：有些改变内存的内联汇编代码，可能会被GCC删除，在汇编声明中加上 ``volatile`` 关键字可以防止这种删除操作。
+
+.. code-block:: c
+
+        asm volatile ("mrc p15, 1, %0, c15, c0, 0\n" : "=r" (ctrl)); 
+        asm volatile ("mcr p15, 1, %0, c15, c0, 0\nisb\n" : : "r" (ctrl));
+
+3. ``jiffies`` 变量是一种特殊情况。
+
+.. code-block:: c
+
+        #ifdef CONFIG_X86_64
+        __visible volatile unsigned long jiffies __cacheline_aligned = INITIAL_JIFFIES;
+        #endif
+
+4. 由于某些IO设备可能会修改连续一致的内存，所以指向连续一致的内存的数据结构的指针需要正确的使用 ``volatile`` 。
+
+.. code-block:: c
+
+         volatile void __iomem *sysctl_base;
+

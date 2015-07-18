@@ -9,7 +9,7 @@ Welcome to 内核知识's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :numbered:
 
    intro
@@ -20,8 +20,10 @@ Contents:
    driver
    kernel-data-structure
    kernel-notifier
+   bootloader
    kernel_glossary
-   misc
+   c_skills
+   debug_skills
    
 
 
