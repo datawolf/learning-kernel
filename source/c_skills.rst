@@ -3,6 +3,48 @@
 C编程技巧
 =========
 
+
+__builtin_return_address和_RET_IP
+----------------------------------
+GCC内建函数 ``__builtin_return_address`` 返回当前函数或者调用者的返回地址，参数 ``LEVEL`` 指定在栈上搜索框的个数。0表示
+当前函数的返回地址，1表示当前函数的调用者的返回地址，依此类推。例如：
+
+.. code-block:: c
+
+        struct vm_struct *__get_vm_area(unsigned long size, unsigned long flags,
+                                unsigned long start, unsigned long end)
+        {
+                return __get_vm_area_node(size, 1, flags, start, end, NUMA_NO_NODE,
+                                          GFP_KERNEL, __builtin_return_address(0));
+        }
+        EXPORT_SYMBOL_GPL(__get_vm_area);
+
+为了简便，内核中将 ``__builtin_return_address(0)`` 进行了封装：
+
+.. code-block:: c
+
+        #define  _RET_IP   (unsigned long)__builtin_return_address(0)
+
+所以，内核中也存在如下的用法：
+
+.. code-block:: c
+
+ 609 static int __init_memblock memblock_add_region(phys_addr_t base,
+ 610                                                 phys_addr_t size,
+ 611                                                 int nid,
+ 612                                                 unsigned long flags)
+ 613 {
+ 614         struct memblock_type *_rgn = &memblock.memory;
+ 615 
+ 616         memblock_dbg("memblock_add: [%#016llx-%#016llx] flags %#02lx %pF\n",
+ 617                      (unsigned long long)base,
+ 618                      (unsigned long long)base + size - 1,
+ 619                      flags, (void *)_RET_IP_);
+ 620 
+ 621         return memblock_add_range(_rgn, base, size, nid, flags);
+ 622 }
+
+
 代码中类似typeof((foo) + 1) 是什么意思呢？
 ------------------------------------------
 
